@@ -40,7 +40,6 @@ class ClassifierLightning(pl.LightningModule):
             pl.metrics.Accuracy(),
             pl.metrics.F1()
         ]
-        self.save_hyperparameters('metrics')
 
     def train_dataloader(self):
         return DataLoader(self.train_ds, batch_size=self.batch_size, pin_memory=True,
