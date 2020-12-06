@@ -8,7 +8,7 @@ class ClassifierLightning(pl.LightningModule):
     def __init__(self, batch_size, num_workers,
                  optimizer_cls, scheduler_cls,
                  train_ds, test_ds,
-                 model, loss, metrics,
+                 model, loss,
                  num_classes):
         super().__init__()
 
@@ -36,7 +36,10 @@ class ClassifierLightning(pl.LightningModule):
         self.num_workers = num_workers
         self.save_hyperparameters('num_workers')
 
-        self.metrics = metrics
+        self.metrics = [
+            pl.metrics.Accuracy(),
+            pl.metrics.F1()
+        ]
         self.save_hyperparameters('metrics')
 
     def train_dataloader(self):

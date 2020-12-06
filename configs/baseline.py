@@ -63,11 +63,6 @@ test_images_data = images_data[int(len(images_data) * train_test_split):]
 
 loss = 'loss/bce', BinaryCrossEntropy()
 
-metrics = [
-    pl.metrics.Accuracy(),
-    pl.metrics.F1()
-]
-
 train_transfoms = A.Compose([
     A.LongestMaxSize(max_size=height),
     A.PadIfNeeded(min_width=width, min_height=height, value=(128, 128, 128), border_mode=0),
@@ -96,5 +91,5 @@ model = create_model(backbone_type=backbone_type,
                      pretrained=pretrained,
                      freeze_backbone=freeze_backbone)
 
-lightning_module_kwargs.update(dict(model=model, loss=loss, metrics=metrics,
+lightning_module_kwargs.update(dict(model=model, loss=loss,
                                     train_ds=train_dataset, test_ds=test_dataset))
