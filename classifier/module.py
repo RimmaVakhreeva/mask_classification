@@ -56,7 +56,7 @@ class ClassifierLightning(pl.LightningModule):
         x, y_true = batch['image'], batch['label']
         y_pred = self(x)
 
-        loss = self.loss(y_pred, y_true[:, None])
+        loss = self.loss(y_pred, y_true)
         res_kwargs = dict(prog_bar=True, on_step=True, on_epoch=True, logger=True)
         self.log(self.loss_name, loss, **res_kwargs)
 
