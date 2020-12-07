@@ -60,20 +60,20 @@ class ClassifierLightning(pl.LightningModule):
         res_kwargs = dict(prog_bar=True, on_step=True, on_epoch=True, logger=True)
         self.log(self.loss_name, loss, **res_kwargs)
 
-        y_pred_confs = y_pred.sigmoid()
-        for metric in self.metrics:
-            self.log(f'train/{type(metric).__name__.lower()}',
-                     metric(y_pred_confs, y_true), **res_kwargs)
+        # y_pred_confs = y_pred.sigmoid()
+        # for metric in self.metrics:
+        #     self.log(f'train/{type(metric).__name__.lower()}',
+        #              metric(y_pred_confs, y_true), **res_kwargs)
         return loss
 
     def test_step(self, batch, batch_nb):
         x, y_true = batch['image'], batch['label']
         y_pred = self(x)
 
-        res_kwargs = dict(prog_bar=True, on_step=False, on_epoch=True, logger=True)
-        for metric in self.metrics:
-            self.log(f'test/{type(metric).__name__.lower()}',
-                     metric(y_pred, y_true), **res_kwargs)
+        # res_kwargs = dict(prog_bar=True, on_step=False, on_epoch=True, logger=True)
+        # for metric in self.metrics:
+        #     self.log(f'test/{type(metric).__name__.lower()}',
+        #              metric(y_pred, y_true), **res_kwargs)
 
     def configure_optimizers(self):
         optimizer = self.optimizer_cls(params=self.parameters())
