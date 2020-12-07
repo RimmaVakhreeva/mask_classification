@@ -1,3 +1,5 @@
+from logging import warning
+
 import cv2
 import torch
 import numpy as np
@@ -17,5 +19,8 @@ class FaceMaskDataset(Dataset):
     def __getitem__(self, idx):
         img_filename, label = self.images_data[idx]
         image = cv2.imread(str(img_filename))[..., ::-1]
+        if image is None:
+            warning(f'bad image: {img_filename}')
+            raise FileNotFoundError
         image = self.transform(image=image)['image']
         return {'image': image, 'label': torch.from_numpy(np.array([label], dtype=np.long))}
