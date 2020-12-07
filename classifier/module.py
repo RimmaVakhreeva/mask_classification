@@ -37,8 +37,8 @@ class ClassifierLightning(pl.LightningModule):
         self.save_hyperparameters('num_workers')
 
         self.metrics = [
-            pl.metrics.Accuracy(),
-            pl.metrics.F1()
+            pl.metrics.classification.accuracy,
+            pl.metrics.functional.f1
         ]
 
     def train_dataloader(self):
