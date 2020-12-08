@@ -51,7 +51,7 @@ wandb_kwargs = dict(
     group='baseline'
 )
 
-images_with_mask = Path('/media/svakhreev/fast/rimma_work/Face_mask_detection/general_with_mask')
+images_with_mask = Path('/media/svakhreev/fast/rimma_work/Face_mask_detection/with_mask')
 images_without_mask = Path('/media/svakhreev/fast/rimma_work/Face_mask_detection/without_mask')
 
 norm_images_with_mask = Path('/media/svakhreev/fast/rimma_work/Face_mask_detection/norm_with_mask')
@@ -59,14 +59,6 @@ norm_images_without_mask = Path('/media/svakhreev/fast/rimma_work/Face_mask_dete
 
 train_images_data = [*load_images(images_with_mask), *load_images(images_without_mask)]
 test_images_data = [*load_images(norm_images_with_mask), *load_images(norm_images_without_mask)]
-
-'''
-images_data = [*load_images(images_with_mask), *load_images(images_without_mask)]
-np.random.shuffle(images_data)
-train_images_data = images_data[:int(len(images_data) * train_test_split)]
-test_images_data = images_data[int(len(images_data) * train_test_split):]
-'''
-
 
 loss = 'loss/bce', BinaryCrossEntropy()
 
@@ -91,7 +83,7 @@ test_transfoms = A.Compose([
 
 # Export part
 train_dataset = FaceMaskDataset(train_images_data, transform=train_transfoms)
-test_dataset = FaceMaskDataset(test_images_data, transform=test_transfoms)
+val_dataset = FaceMaskDataset(test_images_data, transform=test_transfoms)
 
 model = create_model(backbone_type=backbone_type,
                      num_classes=lightning_module_kwargs['num_classes'],
@@ -99,4 +91,4 @@ model = create_model(backbone_type=backbone_type,
                      freeze_backbone=freeze_backbone)
 
 lightning_module_kwargs.update(dict(model=model, loss=loss,
-                                    train_ds=train_dataset, test_ds=test_dataset))
+                                    train_ds=train_dataset, val_ds=val_dataset))

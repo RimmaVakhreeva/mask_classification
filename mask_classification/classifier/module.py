@@ -1,3 +1,5 @@
+from functools import partial
+
 import pytorch_lightning as pl
 from torch.utils.data import DataLoader
 
@@ -7,7 +9,7 @@ __all__ = ['ClassifierLightning']
 class ClassifierLightning(pl.LightningModule):
     def __init__(self, batch_size, num_workers,
                  optimizer_cls, scheduler_cls,
-                 train_ds, test_ds,
+                 train_ds, val_ds,
                  model, loss,
                  num_classes):
         super().__init__()
@@ -29,7 +31,7 @@ class ClassifierLightning(pl.LightningModule):
         self.save_hyperparameters('scheduler_cls')
 
         self.train_ds = train_ds
-        self.test_ds = test_ds
+        self.val_ds = val_ds
 
         self.num_classes = num_classes
         self.save_hyperparameters('num_classes')
@@ -37,16 +39,16 @@ class ClassifierLightning(pl.LightningModule):
         self.save_hyperparameters('num_workers')
 
         self.metrics = [
-            pl.metrics.classification.accuracy,
-            pl.metrics.functional.f1
+            partial(pl.metrics.functional.accuracy, num_classes=num_classes),
+            partial(pl.metrics.functional.f1, num_classes=num_classes),
         ]
 
     def train_dataloader(self):
         return DataLoader(self.train_ds, batch_size=self.batch_size, pin_memory=True,
                           num_workers=self.num_workers, shuffle=True)
 
-    def test_dataloader(self):
-        return DataLoader(self.test_ds, batch_size=self.batch_size,
+    def val_dataloader(self):
+        return DataLoader(self.val_ds, batch_size=self.batch_size,
                           num_workers=self.num_workers)
 
     def forward(self, x):
@@ -60,20 +62,20 @@ class ClassifierLightning(pl.LightningModule):
         res_kwargs = dict(prog_bar=True, on_step=True, on_epoch=True, logger=True)
         self.log(self.loss_name, loss, **res_kwargs)
 
-        # y_pred_confs = y_pred.sigmoid()
-        # for metric in self.metrics:
-        #     self.log(f'train/{type(metric).__name__.lower()}',
-        #              metric(y_pred_confs, y_true), **res_kwargs)
+        y_pred_confs = y_pred.sigmoid()
+        for metric in self.metrics:
+            self.log(f'train/{type(metric).__name__.lower()}',
+                     metric(y_pred_confs, y_true), **res_kwargs)
         return loss
 
-    def test_step(self, batch, batch_nb):
+    def validation_step(self, batch, batch_nb):
         x, y_true = batch['image'], batch['label']
         y_pred = self(x)
 
-        # res_kwargs = dict(prog_bar=True, on_step=False, on_epoch=True, logger=True)
-        # for metric in self.metrics:
-        #     self.log(f'test/{type(metric).__name__.lower()}',
-        #              metric(y_pred, y_true), **res_kwargs)
+        res_kwargs = dict(prog_bar=True, on_step=False, on_epoch=True, logger=True)
+        for metric in self.metrics:
+            self.log(f'val/{type(metric).__name__.lower()}',
+                     metric(y_pred, y_true), **res_kwargs)
 
     def configure_optimizers(self):
         optimizer = self.optimizer_cls(params=self.parameters())
