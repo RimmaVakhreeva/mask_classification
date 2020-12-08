@@ -33,14 +33,12 @@ class ClassifierLightning(pl.LightningModule):
         self.train_ds = train_ds
         self.val_ds = val_ds
 
-        self.num_classes = num_classes
-        self.save_hyperparameters('num_classes')
         self.num_workers = num_workers
         self.save_hyperparameters('num_workers')
 
         self.metrics = [
-            partial(pl.metrics.functional.accuracy, num_classes=num_classes),
-            partial(pl.metrics.functional.f1, num_classes=num_classes),
+            ('accuracy', pl.metrics.functional.accuracy),
+            ('f1', partial(pl.metrics.functional.f1, num_classes=1)),
         ]
 
     def train_dataloader(self):
@@ -62,10 +60,9 @@ class ClassifierLightning(pl.LightningModule):
         res_kwargs = dict(prog_bar=True, on_step=True, on_epoch=True, logger=True)
         self.log(self.loss_name, loss, **res_kwargs)
 
-        y_pred_confs = y_pred.sigmoid()
-        for metric in self.metrics:
-            self.log(f'train/{type(metric).__name__.lower()}',
-                     metric(y_pred_confs, y_true), **res_kwargs)
+        y_pred_labels = y_pred.sigmoid() > 0.5
+        for name, metric in self.metrics:
+            self.log(f'train/{name}', metric(y_pred_labels, y_true), **res_kwargs)
         return loss
 
     def validation_step(self, batch, batch_nb):
@@ -73,9 +70,8 @@ class ClassifierLightning(pl.LightningModule):
         y_pred = self(x)
 
         res_kwargs = dict(prog_bar=True, on_step=False, on_epoch=True, logger=True)
-        for metric in self.metrics:
-            self.log(f'val/{type(metric).__name__.lower()}',
-                     metric(y_pred, y_true), **res_kwargs)
+        for name, metric in self.metrics:
+            self.log(f'val/{name}', metric(y_pred > 0.5, y_true), **res_kwargs)
 
     def configure_optimizers(self):
         optimizer = self.optimizer_cls(params=self.parameters())

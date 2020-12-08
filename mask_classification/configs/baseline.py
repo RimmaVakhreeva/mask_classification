@@ -28,7 +28,6 @@ trainer_kwargs = dict(
 lightning_module_kwargs = dict(
     batch_size=128,
     num_workers=8,
-    num_classes=1,
     optimizer_cls=partial(torch.optim.Adam, lr=1e-4),
     scheduler_cls=dict(scheduler=partial(torch.optim.lr_scheduler.StepLR,
                                          step_size=trainer_kwargs['max_epochs'] // 3, gamma=0.1),
@@ -86,7 +85,6 @@ train_dataset = FaceMaskDataset(train_images_data, transform=train_transfoms)
 val_dataset = FaceMaskDataset(test_images_data, transform=test_transfoms)
 
 model = create_model(backbone_type=backbone_type,
-                     num_classes=lightning_module_kwargs['num_classes'],
                      pretrained=pretrained,
                      freeze_backbone=freeze_backbone)
 
