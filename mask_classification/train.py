@@ -4,8 +4,8 @@ from pathlib import Path
 import wandb
 from pytorch_lightning import Trainer, loggers, callbacks
 
-from classifier.module import ClassifierLightning
-from classifier.utils import load_module
+from mask_classification.classifier.module import ClassifierLightning
+from mask_classification.classifier.utils import load_module
 
 parser = ArgumentParser()
 parser.add_argument('config', type=Path)

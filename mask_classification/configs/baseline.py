@@ -6,12 +6,10 @@ import numpy as np
 import albumentations as A
 import albumentations.pytorch as AP
 
-import pytorch_lightning as pl
-
-from classifier.dataset import FaceMaskDataset
-from classifier.create_model import create_model
-from classifier.loss import BinaryCrossEntropy
-from classifier.utils import load_images, seed_everything_deterministic
+from mask_classification.classifier.dataset import FaceMaskDataset
+from mask_classification.classifier.create_model import create_model
+from mask_classification.classifier.loss import BinaryCrossEntropy
+from mask_classification.classifier.utils import load_images, seed_everything_deterministic
 
 __all__ = ['base_kwargs', 'trainer_kwargs', 'lightning_module_kwargs']
 
@@ -56,10 +54,19 @@ wandb_kwargs = dict(
 images_with_mask = Path('/media/svakhreev/fast/rimma_work/Face_mask_detection/general_with_mask')
 images_without_mask = Path('/media/svakhreev/fast/rimma_work/Face_mask_detection/without_mask')
 
+norm_images_with_mask = Path('/media/svakhreev/fast/rimma_work/Face_mask_detection/norm_with_mask')
+norm_images_without_mask = Path('/media/svakhreev/fast/rimma_work/Face_mask_detection/norm_without_mask')
+
+train_images_data = [*load_images(images_with_mask), *load_images(images_without_mask)]
+test_images_data = [*load_images(norm_images_with_mask), *load_images(norm_images_without_mask)]
+
+'''
 images_data = [*load_images(images_with_mask), *load_images(images_without_mask)]
 np.random.shuffle(images_data)
 train_images_data = images_data[:int(len(images_data) * train_test_split)]
 test_images_data = images_data[int(len(images_data) * train_test_split):]
+'''
+
 
 loss = 'loss/bce', BinaryCrossEntropy()
 
