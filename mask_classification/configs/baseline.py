@@ -86,6 +86,7 @@ val_dataset = FaceMaskDataset(test_images_data, transform=test_transfoms)
 
 model = create_model(backbone_type=backbone_type,
                      pretrained=pretrained,
+                     num_classes=1,
                      freeze_backbone=freeze_backbone)
 
 lightning_module_kwargs.update(dict(model=model, loss=loss,
