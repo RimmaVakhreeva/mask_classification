@@ -46,7 +46,7 @@ def create_model(pretrained, **kwargs) -> torch.nn.Module:
         backbone.forward = backbone.features
         input_channels = backbone.last_linear.in_features
     elif backbone_type in timm.list_models():
-        backbone = create_model(backbone_type, pretrained=True)
+        backbone = timm.create_model(backbone_type, pretrained=True)
         backbone.forward = backbone.forward_features
         input_channels = backbone.classifier.in_features
     else:
