@@ -2,6 +2,7 @@ import torch.nn
 import torch.optim
 
 import pretrainedmodels
+import timm
 
 __all__ = ['create_model']
 
@@ -43,7 +44,11 @@ def create_model(pretrained, **kwargs) -> torch.nn.Module:
     if backbone_type in pretrainedmodels.__dict__:
         backbone = pretrainedmodels.__dict__[backbone_type](pretrained=pretrained)
         backbone.forward = backbone.features
+        input_channels = backbone.last_linear.in_features
+    elif backbone_type in timm.list_models():
+        backbone = create_model(backbone_type, pretrained=True)
+        backbone.forward = backbone.forward_features
+        input_channels = backbone.classifier.in_features
     else:
-        assert False, f"{backbone_type} not found in pretrainedmodels"
-    return ClassifierWrapper(backbone_module=backbone,
-                             input_channels=backbone.last_linear.in_features, **kwargs)
+        assert False, f"{backbone_type} not found in pretrainedmodels and timm"
+    return ClassifierWrapper(backbone_module=backbone, input_channels=input_channels, **kwargs)

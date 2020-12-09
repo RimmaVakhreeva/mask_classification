@@ -9,13 +9,13 @@ from demo.aligment import face_align
 from demo.retinaface import create_retinaface, retinaface_forward
 
 test_images_with_mask = Path('/Users/rimmavahreeva/Desktop/Face_mask_detection/test/with_mask')
-test_images_without_mask = Path('/Users/rimmavahreeva/Desktop/Face_mask_detection/test/without_mask')
+#test_images_without_mask = Path('/Users/rimmavahreeva/Desktop/Face_mask_detection/test/without_mask')
 
 test_normalize_images_with_mask = Path('/Users/rimmavahreeva/Desktop/Face_mask_detection/test_normalize_images/with_mask')
-test_normalize_images_without_mask = Path('/Users/rimmavahreeva/Desktop/Face_mask_detection/test_normalize_images/without_mask')
+#test_normalize_images_without_mask = Path('/Users/rimmavahreeva/Desktop/Face_mask_detection/test_normalize_images/without_mask')
 
 img_suffixes = {'.png', '.jpg', '.jpeg'}
-for image_filename in tqdm(test_images_without_mask.iterdir()):
+for image_filename in tqdm(test_images_with_mask.iterdir()):
     if image_filename.suffix.lower() not in img_suffixes:
         continue
     image = cv2.imread(str(image_filename))
@@ -29,6 +29,6 @@ for image_filename in tqdm(test_images_without_mask.iterdir()):
     landmarks = landmarks.reshape((-1, 5, 2))
     warped_images = face_align(image, landmarks, image_size=112)
     assert len(warped_images) > 0
-    cv2.imwrite(str(test_normalize_images_without_mask / image_filename.name),
+    cv2.imwrite(str(test_normalize_images_with_mask / image_filename.name),
                 warped_images[0])
 
