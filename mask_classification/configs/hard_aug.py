@@ -51,7 +51,7 @@ wandb_kwargs = dict(
     group='baseline'
 )
 
-images_with_mask = Path('/media/svakhreev/fast/rimma_work/Face_mask_detection/general_with_mask')
+images_with_mask = Path('/media/svakhreev/fast/rimma_work/Face_mask_detection/main_images_with_mask')
 images_without_mask = Path('/media/svakhreev/fast/rimma_work/Face_mask_detection/without_mask')
 
 norm_images_with_mask = Path('/media/svakhreev/fast/rimma_work/Face_mask_detection/norm_with_mask')
