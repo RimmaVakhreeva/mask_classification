@@ -19,7 +19,7 @@ seed_everything_deterministic(42)
 base_kwargs = dict(
     log_dir=Path('./logs/baseline'))
 trainer_kwargs = dict(
-    gpus=[1],
+    gpus=[0],
     max_epochs=20,
     val_check_interval=1.,
     precision=16,
@@ -27,8 +27,8 @@ trainer_kwargs = dict(
     distributed_backend='ddp'
 )
 lightning_module_kwargs = dict(
-    batch_size=128,
-    num_workers=8,
+    batch_size=256,
+    num_workers=16,
     optimizer_cls=partial(torch.optim.SGD, lr=1e-3),
     scheduler_cls=dict(scheduler=partial(torch.optim.lr_scheduler.StepLR,
                                          step_size=trainer_kwargs['max_epochs'] // 3, gamma=0.1),
