@@ -57,8 +57,8 @@ images_without_mask = Path('/media/svakhreev/fast/rimma_work/Face_mask_detection
 norm_images_with_mask = Path('/media/svakhreev/fast/rimma_work/Face_mask_detection/norm_with_mask')
 norm_images_without_mask = Path('/media/svakhreev/fast/rimma_work/Face_mask_detection/norm_without_mask')
 
-train_images_data = [*load_images(images_with_mask, masks_folder_name='general_with_mask'),
-                     *load_images(images_without_mask, masks_folder_name='general_with_mask')]
+train_images_data = [*load_images(images_with_mask, masks_folder_name='main_images_with_mask'),
+                     *load_images(images_without_mask, masks_folder_name='main_images_with_mask')]
 test_images_data = [*load_images(norm_images_with_mask, masks_folder_name='norm_with_mask'),
                     *load_images(norm_images_without_mask, masks_folder_name='norm_with_mask')]
 
