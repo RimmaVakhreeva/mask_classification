@@ -16,7 +16,6 @@ test_transfoms = A.Compose([
     AP.transforms.ToTensorV2()
 ])
 
-
 def _conf_2_label(conf: float) -> str:
     if conf <= 0.3:
         return 'no_mask'
@@ -63,7 +62,7 @@ capture = cv2.VideoCapture(0)
 frame_width = int(capture.get(3))
 frame_height = int(capture.get(4))
 
-writer = cv2.VideoWriter('output.mp4', cv2.VideoWriter_fourcc(*'MP4V'), 25, (frame_width, frame_height))
+writer = cv2.VideoWriter('output.mp4', cv2.VideoWriter_fourcc(*'MP4V'), 5, (frame_width, frame_height))
 retinaface_model = create_retinaface('/Users/rimmavahreeva/PycharmProjects/mask_classification/'
                           'demo/checkpoints/mobilenet0.25_Final.pth', cpu=True)
 
