@@ -107,7 +107,6 @@ generated_reid_ds
 
 _temp/
 wandb/
-stuff/
 common_db/
 videos/
 models/
