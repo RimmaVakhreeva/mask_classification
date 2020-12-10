@@ -61,6 +61,7 @@ train_images_data = [*load_images(images_with_mask, label=1),
                      *load_images(norm_mafa_images, label=1)]
 test_images_data = [*load_images(norm_images_with_mask, label=1),
                     *load_images(norm_images_without_mask, label=0)]
+np.random.shuffle(test_images_data)
 
 loss = 'loss/bce', BinaryCrossEntropy()
 
