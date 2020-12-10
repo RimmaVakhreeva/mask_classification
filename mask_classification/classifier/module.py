@@ -8,9 +8,9 @@ __all__ = ['ClassifierLightning']
 
 class ClassifierLightning(pl.LightningModule):
     def __init__(self, batch_size, num_workers,
-                 optimizer_cls, scheduler_cls,
-                 train_ds, val_ds,
-                 model, loss):
+                 optimizer_cls, scheduler_cls, loss,
+                 train_ds=None, val_ds=None,
+                 model=None):
         super().__init__()
 
         self.batch_size = batch_size

@@ -498,7 +498,8 @@ if __name__ == '__main__':
     image = cv2.imread('/Users/rimmavahreeva/Desktop/Face_mask_detection/test/with_mask/0_0_≈˙◊¢ 2020-02-24 215234.png')
     model = create_retinaface('/Users/rimmavahreeva/PycharmProjects/mask_classification/'
                               'demo/checkpoints/mobilenet0.25_Final.pth', cpu=True)
-    bboxes, scores, landmarks = retinaface_forward(model, image, confidence_threshold=0.5)
+    with torch.no_grad():
+        bboxes, scores, landmarks = retinaface_forward(model, image, confidence_threshold=0.5)
 
     for (x1, y1, x2, y2), score, lmks in zip(bboxes, scores, landmarks):
         cv2.rectangle(image, (x1, y1), (x2, y2), (0, 0, 255), 2)

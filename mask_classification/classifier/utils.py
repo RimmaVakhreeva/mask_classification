@@ -7,13 +7,13 @@ from pytorch_lightning import seed_everything
 __all__ = ['load_images', 'seed_everything_deterministic']
 
 
-def load_images(folder, masks_folder_name='with_mask'):
+def load_images(folder, label: int):
     output_data = []
     img_suffixes = {'.png', '.jpg', '.jpeg'}
     for image_filename in tqdm.tqdm(folder.iterdir()):
         if image_filename.suffix.lower() not in img_suffixes:
             continue
-        output_data.append((image_filename, int(image_filename.parent.name == masks_folder_name)))
+        output_data.append((image_filename, label))
     return output_data
 
 

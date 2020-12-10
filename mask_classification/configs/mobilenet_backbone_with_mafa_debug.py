@@ -19,16 +19,12 @@ seed_everything_deterministic(42)
 base_kwargs = dict(
     log_dir=Path('./logs/baseline'))
 trainer_kwargs = dict(
-    gpus=[0],
     max_epochs=50,
     val_check_interval=1.,
-    precision=16,
-    amp_backend='native',
-    distributed_backend='ddp'
 )
 lightning_module_kwargs = dict(
-    batch_size=256,
-    num_workers=16,
+    batch_size=64,
+    num_workers=0,
     optimizer_cls=partial(torch.optim.SGD, lr=1e-3),
     scheduler_cls=dict(scheduler=partial(torch.optim.lr_scheduler.StepLR,
                                          step_size=trainer_kwargs['max_epochs'] // 3, gamma=0.1),
@@ -50,11 +46,11 @@ wandb_kwargs = dict(
     group='baseline'
 )
 
-images_with_mask = Path('/media/svakhreev/fast/rimma_work/Face_mask_detection/main_images_with_mask')
-images_without_mask = Path('/media/svakhreev/fast/rimma_work/Face_mask_detection/without_mask')
-norm_images_with_mask = Path('/media/svakhreev/fast/rimma_work/Face_mask_detection/norm_with_mask')
-norm_mafa_images = Path('/media/svakhreev/fast/rimma_work/Face_mask_detection/normalize_mafa')
-norm_images_without_mask = Path('/media/svakhreev/fast/rimma_work/Face_mask_detection/norm_without_mask')
+images_with_mask = Path('/Users/rimmavahreeva/Desktop/datasets/main_images_with_mask')
+images_without_mask = Path('/Users/rimmavahreeva/Desktop/datasets/without_mask')
+norm_images_with_mask = Path('/Users/rimmavahreeva/Desktop/datasets/norm_with_mask')
+norm_mafa_images = Path('/Users/rimmavahreeva/Desktop/datasets/normalize_mafa')
+norm_images_without_mask = Path('/Users/rimmavahreeva/Desktop/datasets/norm_without_mask')
 
 train_images_data = [*load_images(images_with_mask, label=1),
                      *load_images(images_without_mask, label=0),
@@ -102,7 +98,7 @@ test_transfoms = A.Compose([
 ])
 
 # Export part
-train_dataset = FaceMaskDataset(train_images_data, transform=train_transfoms)
+train_dataset = FaceMaskDataset(train_images_data, transform=train_transfoms, debug=False)
 val_dataset = FaceMaskDataset(test_images_data, transform=test_transfoms)
 
 model = create_model(backbone_type=backbone_type,
