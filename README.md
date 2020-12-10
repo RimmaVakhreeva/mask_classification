@@ -32,4 +32,4 @@
 
 Результаты: accuracy=0.955, f1=0.945.
 
-![](output.gif)
+![](https://github.com/RimmaVakhreeva/mask_classification/tree/master/stuff/output.gif)
