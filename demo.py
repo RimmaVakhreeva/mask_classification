@@ -20,7 +20,7 @@ test_transfoms = A.Compose([
 def _conf_2_label(conf: float) -> str:
     if conf <= 0.3:
         return 'no_mask'
-    elif 0.3 < conf < 0.7:
+    elif 0.3 < conf < 0.5:
         return 'unknown'
     else:
         return 'with_mask'
