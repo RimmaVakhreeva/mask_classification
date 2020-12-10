@@ -30,6 +30,6 @@
 
 6. backbone - mobilenetv3_large_100, оптимизатор - SGD, функция потерь - BinaryCrossEntropy, количество эпох - 50. Была исправлена аугментация тренировочных данных.
 
-Результаты: accuracy=0.955, f1=0.945.
+Результаты: accuracy=0.96, f1=0.95.
 
 ![](stuff/output.gif)
